@@ -1,5 +1,6 @@
 import Header from "./Header";
 import CartOverview from "../features/cart/CartOverview";
+// eslint-disable-next-line no-unused-vars
 import { Outlet, useNavigation } from "react-router-dom";
 import Loader from "./Loader";
 
@@ -9,6 +10,7 @@ function AppLayout() {
   return (
     <div className="grid h-screen grid-rows-[auto_1fr_auto]">
       {isLoading && <Loader />}
+      {/* {true && <Loader />} */}
       <Header />
       <div className="overflow-scroll">
         <main className="mx-auto max-w-3xl">
