@@ -1,11 +1,27 @@
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../ui/Button";
 import { formatCurrency } from "../utils/helpers";
+import { addItem, getCurQty } from "../cart/cartSlice";
+import DeleteItem from "../cart/DeleteItem";
+import UpdateQty from "../cart/UpdateQty";
 
 /* eslint-disable react/prop-types */
 function MenuItem({ pizza }) {
   // eslint-disable-next-line no-unused-vars
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
-
+  const dispatch = useDispatch();
+  const curQty = useSelector(getCurQty);
+  const isInCart = curQty > 0;
+  function handleAddToCart() {
+    const newItem = {
+      pizzaId: id,
+      name,
+      quantity: 1,
+      unitPrice,
+      totalPrice: unitPrice * this.quantity,
+    };
+    dispatch(addItem(newItem));
+  }
   return (
     <li className="flex gap-4 py-2">
       <img
@@ -13,7 +29,7 @@ function MenuItem({ pizza }) {
         alt={name}
         className={`h-24 ${soldOut ? "opacity-70 grayscale" : ""}`}
       />
-      <div className="flex flex-col grow pt-0.5">
+      <div className="flex grow flex-col pt-0.5">
         <p className="font-medium">{name}</p>
         <p className="test-stone-500 text-sm capitalize italic">
           {ingredients.join(", ")}
@@ -26,7 +42,16 @@ function MenuItem({ pizza }) {
               Sold out
             </p>
           )}
-          <Button type='small'>Add to Cart</Button>
+          {isInCart &&
+          <div className="flex items-center gap-3 sm:gap-8"> 
+            <UpdateQty pizzaId={id} curQty={curQty}/>
+            <DeleteItem pizzaId={id} />
+            </div>}
+          {!soldOut && (
+            <Button type="small" onClick={handleAddToCart}>
+              Add to Cart
+            </Button>
+          )}
         </div>
       </div>
     </li>
