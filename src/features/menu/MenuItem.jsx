@@ -10,7 +10,7 @@ function MenuItem({ pizza }) {
   // eslint-disable-next-line no-unused-vars
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const dispatch = useDispatch();
-  const curQty = useSelector(getCurQty);
+  const curQty = useSelector(state => getCurQty(state,id));
   const isInCart = curQty > 0;
   function handleAddToCart() {
     const newItem = {
@@ -18,8 +18,9 @@ function MenuItem({ pizza }) {
       name,
       quantity: 1,
       unitPrice,
-      totalPrice: unitPrice * this.quantity,
+      totalPrice: unitPrice * 1,
     };
+    console.log(curQty);
     dispatch(addItem(newItem));
   }
   return (
@@ -43,11 +44,11 @@ function MenuItem({ pizza }) {
             </p>
           )}
           {isInCart &&
-          <div className="flex items-center gap-3 sm:gap-8"> 
+          <div className="flex items-center gap-3 sm:gap-8">
             <UpdateQty pizzaId={id} curQty={curQty}/>
             <DeleteItem pizzaId={id} />
-            </div>}
-          {!soldOut && (
+          </div>}
+          {!soldOut && !isInCart && (
             <Button type="small" onClick={handleAddToCart}>
               Add to Cart
             </Button>
